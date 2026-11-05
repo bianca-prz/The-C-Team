@@ -21,6 +21,13 @@ Situación - Problema 2: Inserción y Estabilidad en Órbita Terrestre Baja — 
 ## 📑 Descripción del Escenario 
 ### *Situación - Problema 1: Ascenso y Propulsión con el SLS (MRUV y Desprendimiento)*
 
-Durante el despegue desde el Centro Espacial Kennedy, el cohete Space Launch System (SLS) eleva a la nave Orion partiendo del reposo (v<sub>0</sub> = 0,0 m/s) en la plataforma de lanzamiento (y<sub>0</sub> = 0,0 m). En la primera fase de ascenso vertical rectilíneo, el cohete acelera hacia arriba con una aceleración constante de a<sub>1</sub> = 20,0 m/s<sup>2</sup> impulsado por los motores principales y los dos cohetes de combustible sólido (SRB). A los t<sub>1</sub> = 120,0 s (2,00 min) de vuelo, los cohetes SRB agotados se desacoplan limpiamente. A partir de ese instante, el motor del núcleo principal continúa acelerando la nave a a<sub>2</sub> = 12,5 m/s<sup>2</sup> hasta alcanzar una altitud de h = 160,0 km (160.000,0 m), donde los motores se apagan. Se desprecia la resistencia del aire en la alta atmósfera.
+Durante el despegue desde el Centro Espacial Kennedy, el cohete Space Launch System (SLS) eleva a la nave Orion partiendo del reposo (v<sub>0</sub> = 0,0 m/s) en la plataforma de lanzamiento (y<sub>0</sub> = 0,0 m). En la primera fase de ascenso vertical rectilíneo, el cohete acelera hacia arriba con una aceleración constante de a<sub>1</sub> = 20,0 m/s<sup>2</sup> impulsado por los motores principales y los dos cohetes de combustible sólido (SRB). A los t<sub>1</sub> = 120,0 s (2,00 min) de vuelo, los cohetes SRB agotados se desacoplan limpiamente. A partir de ese instante, el motor del núcleo principal continúa acelerando la nave a  a<sub>2</sub> = 12,5 m/s<sup>2</sup> hasta alcanzar una altitud de h = 160,0 km (160.000,0 m), donde los motores se apagan. Se desprecia la resistencia del aire en la alta atmósfera.
+
+#### Fases del Ascenso:
+1. **Fase 1 (Aceleración con SRB):** El cohete acelera verticalmente con a<sub>1</sub> = 20,0 m/s<sup>2</sup> impulsado por los motores principales y los cohetes de combustible sólido. A los t<sub>1</sub> = 120,0 s (2,00 min), los SRB se desacoplan de forma limpia.
+2. **Fase 2 (Núcleo Principal):** El motor principal continúa acelerando la nave a a<sub>2</sub> = 12,5 m/s<sup>2</sup> hasta alcanzar la altitud objetivo de h = 160.000,0 m (160,0 km), momento en el cual se produce el apagado de motores (MECO).
+3. **Fase 3 (Inercia y Caída Libre - Opcional/Contingencia):** Si los motores fallaran al llegar a los 160,0 km, la nave continúa por inercia bajo la aceleración de la gravedad (g = 9,80 m/s<sup>2</sup>) hasta alcanzar una altitud máxima (h<sub>máx</sub>).
+
+#### Reglas del Juego
 
 
