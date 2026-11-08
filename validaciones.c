@@ -28,3 +28,26 @@ do {
 
     return valor;
 }
+
+int leerEnteroSeguro(const char* mensaje, int min, int max) {
+    int valor;
+    char buffer[100];
+    int valido = 0;
+
+    do {
+        printf("%s", mensaje);
+        if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+            if (sscanf(buffer, "%d", &valor) == 1) {
+                if (valor >= min && valor <= max) {  // && indica que ambas condiciones deben cumplirse
+                    valido = 1;
+                } else {
+                    printf("[ERROR] Opcion fuera de rango (%d - %d).\n", min, max);
+                }
+            } else {
+                printf("[ERROR] Entrada invalida. Ingrese un numero entero.\n");
+            }
+        }
+    } while (!valido);
+
+    return valor;
+}
