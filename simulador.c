@@ -16,4 +16,27 @@ void mostrarMenuPrincipal() {
     printf("===================================================\n");
 }
 
+ParametrosMision configurarMision(ParametrosMision actual) {
+    int opcion;
+    printf("\n--- CONFIGURACIÓN DE LA MISIÓN ---\n");
+    printf("1) Cargar valores por defecto oficiales (Artemis I)\n");
+    printf("2) Personalizar parametros manualmente\n");
+    opcion = leerEnteroSeguro("Seleccione una opcion (1-2): ", 1, 2);
 
+   if (opcion == 1) { //se reasignan los valores por si el usuario desea reestablecer lo valores por defecto
+        actual.a1 = 20.0;
+        actual.t1 = 120.0;
+        actual.a2 = 12.5;
+        actual.h_obj = 160000.0;
+        actual.g = 9.80;
+        printf("\nParametros oficiales cargados con exito.\n");
+    } else {
+        printf("\nIngrese los nuevos parametros:\n");
+        actual.a1 = leerDoubleSeguro("Aceleracion fase 1 a1 (m/s^2) [> 9.8]: ", 9.81, 100.0);
+        actual.t1 = leerDoubleSeguro("Tiempo de desacople SRB t1 (s) [> 0]: ", 1.0, 1000.0);
+        actual.a2 = leerDoubleSeguro("Aceleracion fase 2 a2 (m/s^2) [> 0]: ", 0.1, 100.0);
+        actual.h_obj = leerDoubleSeguro("Altitud objetivo h (m): ", 1000.0, 1000000.0);
+        actual.g = leerDoubleSeguro("Gravedad local g (m/s^2): ", 1.0, 30.0);
+    }
+    return actual;
+}
