@@ -15,22 +15,26 @@ int main() {
     .g = 9.80
 };
 int opcion;
-
+    // Bucle principal del Centro de Control que mantiene el programa abierto
     do {
         mostrarMenuPrincipal();
         opcion = leerEnteroSeguro("Seleccione una opcion del menu (1-5): ", 1, 5);
 
         switch (opcion) {
             case 1:
+            // Configurar o restablecer parámetros de la misión
                 mision = configurarMision(mision);
                 break;
             case 2:
+            // Lanzamiento en vivo con tablero fijo y control de teclas (P, X, F, Q)
                 ejecutarSimulacionEnVivo(mision);
                 break;
             case 3:
+            // Panel de análisis con resultados analíticos MRUV en 3 niveles
                 mostrarPanelAnalisis(mision);
                 break;
             case 4:
+            // Ayuda y glosario técnico de la misión Artemis
                 mostrarAyudaGlosario();
                 break;
             case 5:
