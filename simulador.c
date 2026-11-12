@@ -2,6 +2,17 @@
 #include <math.h>
 #include "simulador.h"
 #include "validaciones.h"
+ 
+#ifdef _WIN32
+    #include <windows.h>
+    #include <conio.h>
+    #define SLEEP_MS(ms) Sleep(ms)
+#else
+    #include <unistd.h>
+    #include <termios.h>
+    #include <sys/select.h>
+    #define SLEEP_MS(ms) usleep((ms) * 1000)
+#endif
 
 void mostrarMenuPrincipal() {
     printf("\n");
@@ -41,27 +52,185 @@ ParametrosMision configurarMision(ParametrosMision actual) {
     return actual;
 }
 
-/* ---------- FUNCIÓN DE CÁLCULO ---------- */
-/** 
- * FUNCIÓN DE CÁLCULO:
- *Aísla todos los cálculos de MRUV y devuelve una estructura con los resultados listos.
-*/
-ResultadosTeoricos calcularResultadosTeoricos(ParametrosMision m) {
-    ResultadosTeoricos r;
-    // 1. Velocidad y altitud al final de la Fase 1
-    r.v1 = m.a1 * m.t1;
-    r.y1 = 0.5 * m.a1 * pow(m.t1, 2);
-
-    //2. Velocidad al apagado de motores (MECO)
-    double v2_cuadrado = pow(r.v1, 2) + 2 * m.a2 * (m.h_obj - r.y1);
-    r.v2 = (v2_cuadrado > 0) ? sqrt(v2_cuadrado) : 0.0;
-
-    //3. Altitud máxima en caída libre (inercia)
-    double d_extra = pow(r.v2, 2) / (2 * m.g);
-    r.h_max = m.h_obj + d_extra;
-
-    //4. Fueeza G experimentada por la tripulación
-    r.g_force = m.a1 / m.g;
-
-    return r;
+#define EOL "\033[K\n"   /* borra el resto de la linea y salta de linea */
+ 
+#ifdef _WIN32
+ 
+static void prepararTerminal(void) {
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD modo = 0;
+    if (GetConsoleMode(h, &modo)) {
+        SetConsoleMode(h, modo | 0x0004); 
+    }
+}
+static void restaurarTerminal(void) {
+    while (_kbhit()) _getch();  
+}
+static int hayTecla(void)  { return _kbhit(); }
+static int leerTecla(void) { return _getch(); }
+ 
+#else
+ 
+static struct termios termOriginal;
+ 
+static void prepararTerminal(void) {
+    struct termios raw;
+    tcgetattr(STDIN_FILENO, &termOriginal);
+    raw = termOriginal;
+    raw.c_lflag &= ~(ICANON | ECHO);   
+    raw.c_cc[VMIN] = 0;
+    raw.c_cc[VTIME] = 0;
+    tcsetattr(STDIN_FILENO, TCSANOW, &raw);
+}
+static void restaurarTerminal(void) {
+    tcflush(STDIN_FILENO, TCIFLUSH);   
+    tcsetattr(STDIN_FILENO, TCSANOW, &termOriginal);
+}
+static int hayTecla(void) {
+    fd_set fds;
+    struct timeval tv = {0, 0};
+    FD_ZERO(&fds);
+    FD_SET(STDIN_FILENO, &fds);
+    return select(STDIN_FILENO + 1, &fds, NULL, NULL, &tv) > 0;
+}
+static int leerTecla(void) {
+    unsigned char c;
+    return (read(STDIN_FILENO, &c, 1) == 1) ? c : -1;
+}
+ 
+#endif
+ 
+void ejecutarSimulacionEnVivo(ParametrosMision m) {
+   
+    printf("\n[CENTRO DE CONTROL] Iniciando secuencia de lanzamiento...\n");
+    for (int t = 10; t >= 0; t--) {
+        printf("\rT- %02d s   [ESTADO: Preparando ignicion]", t);
+        fflush(stdout);
+        SLEEP_MS(300);
+    }
+    printf("\rT- 00 s   >>> IGNICION Y DESPEGUE DEL SLS <<<\n\n");
+    SLEEP_MS(1000);
+ 
+    /* 2. Variables de estado */
+    double t_actual = 0.0;
+    double altitud = 0.0;
+    double velocidad = 0.0;
+    double aceleracion_actual = m.a1;
+    int fase = 1;
+    int velocidad_sim = 1;   
+    int pausado = 0;
+    int abortado = 0;
+    int fallado = 0;
+    int meco = 0;
+    double dt = 0.5;
+ 
+    /* Valores al momento del desacople (constantes) */
+    double v1_srb = m.a1 * m.t1;
+    double y1_srb = 0.5 * m.a1 * m.t1 * m.t1;
+ 
+    prepararTerminal();
+    printf("\033[2J");   /* limpia la pantalla una sola vez */
+ 
+    while (1) {
+        while (hayTecla()) {
+            int c = leerTecla();
+            if (c == 'p' || c == 'P') {
+                pausado = !pausado;
+            } else if (c == 'x' || c == 'X') {
+                if (velocidad_sim == 1) velocidad_sim = 10;
+                else if (velocidad_sim == 10) velocidad_sim = 50;
+                else velocidad_sim = 1;
+            } else if (c == 'f' || c == 'F') {
+                fallado = 1;
+            } else if (c == 'q' || c == 'Q') {
+                abortado = 1;
+            }
+        }
+        if (abortado || fallado) break;
+ 
+        if (fase == 1 && t_actual >= m.t1) {
+            fase = 2;
+            printf("\033[H\033[J");
+            printf("\n>>> [EVENTO] DESACOPLE DE SRB CONFIRMADO a t+%.1f s <<<\n", t_actual);
+            fflush(stdout);
+            SLEEP_MS(1500);
+        }
+ 
+        if (fase == 1) {
+            aceleracion_actual = m.a1;
+            velocidad = m.a1 * t_actual;
+            altitud = 0.5 * m.a1 * t_actual * t_actual;
+            if (altitud >= m.h_obj) {   /* objetivo alcanzado dentro de la fase 1 */
+                altitud = m.h_obj;
+                velocidad = sqrt(2 * m.a1 * m.h_obj);
+                meco = 1;
+            }
+        } else {
+            double t2 = t_actual - m.t1;
+            aceleracion_actual = m.a2;
+            velocidad = v1_srb + m.a2 * t2;
+            altitud = y1_srb + v1_srb * t2 + 0.5 * m.a2 * t2 * t2;
+            if (altitud >= m.h_obj) {
+                altitud = m.h_obj;
+                velocidad = sqrt(v1_srb * v1_srb + 2 * m.a2 * (m.h_obj - y1_srb));
+                meco = 1;
+            }
+        }
+ 
+        /* --- TABLERO DE TELEMETRIA --- */
+        printf("\033[H");
+        printf("===================================================================" EOL);
+        printf(" 3. LA SIMULACION EN VIVO (CENTRO DE CONTROL ARTEMIS)" EOL);
+        printf("===================================================================" EOL);
+        printf(" T+ %05.1f s  |  FASE %d : %s %s" EOL,
+               t_actual, fase,
+               (fase == 1) ? "PROPULSION CONJUNTA (SRB + NUCLEO)" : "PROPULSION NUCLEO PRINCIPAL",
+               pausado ? "[PAUSA]" : "");
+        printf("-------------------------------------------------------------------" EOL);
+ 
+        int barra = (int)((altitud / m.h_obj) * 30);
+        if (barra > 30) barra = 30;
+        printf(" ALTITUD    [");
+        for (int i = 0; i < 30; i++) printf(i < barra ? "#" : "-");
+        printf("] %6.1f km / %.1f km" EOL, altitud / 1000.0, m.h_obj / 1000.0);
+ 
+        printf(" VELOCIDAD  %-8.1f m/s     | ACEL. : %.1f m/s^2 (%.2f g)" EOL,
+               velocidad, aceleracion_actual, aceleracion_actual / m.g);
+        printf("-------------------------------------------------------------------" EOL);
+ 
+        if (fase == 1) {
+            printf(" SRB: [ACTIVOS]          NUCLEO: [ENCENDIDO]" EOL);
+            printf(" Proximo evento: DESACOPLE SRB en %.0f s" EOL,
+                   (m.t1 - t_actual > 0) ? m.t1 - t_actual : 0.0);
+        } else {
+            printf(" SRB: [DESACOPLADOS]     NUCLEO: [ENCENDIDO]" EOL);
+            printf(" Proximo evento: MECO (Corte de motores) al alcanzar objetivo" EOL);
+        }
+ 
+        printf("-------------------------------------------------------------------" EOL);
+        printf(" [P] Pausa   [X] Velocidad (x%d)   [F] Falla motores   [Q] Abortar" EOL, velocidad_sim);
+        printf("===================================================================" EOL);
+        fflush(stdout);
+ 
+        if (meco) break;
+ 
+        if (!pausado) t_actual += dt * velocidad_sim;
+        SLEEP_MS(200 / velocidad_sim);
+    }
+ 
+    restaurarTerminal();
+ 
+    if (meco) {
+        printf("\n>>> [EVENTO] CORTE DE MOTOR PRINCIPAL (MECO) ALCANZADO <<<\n");
+    } else if (fallado) {
+        double apogeo = altitud + (velocidad * velocidad) / (2 * m.g);
+        printf("\n>>> [ALERTA] FALLA DE MOTORES a t+%.1f s <<<\n", t_actual);
+        printf("Altitud al momento de la falla: %.2f m | Apogeo estimado por inercia: %.2f m\n",
+               altitud, apogeo);
+    } else if (abortado) {
+        printf("\n>>> [ABORTO] MISION ABORTADA por el operador a t+%.1f s <<<\n", t_actual);
+    }
+ 
+    printf("\n[SIMULACION FINALIZADA] Presione Enter para volver al menu principal...");
+    getchar();
 }
