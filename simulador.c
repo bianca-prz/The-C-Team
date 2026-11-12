@@ -234,3 +234,53 @@ void ejecutarSimulacionEnVivo(ParametrosMision m) {
     printf("\n[SIMULACION FINALIZADA] Presione Enter para volver al menu principal...");
     getchar();
 }
+
+void mostrarPanelAnalisis (ParametrosMision m) {
+ //Calculos analiticos excactos basados en el modelo de MRUV
+ double v1 = m.a1 * m.t1;
+ double y1 = 0.5 * m.a1 * pow(m.t1, 2);
+ double v2_cuadrado = pow(v1, 2) + 2 * m.a2 * (m.h_obj - y1)
+ double v2 = (v2_cuadrado > 0) ? sqrt(v2_cuadrado) : 0.0;
+ double d_extra = pow(v2, 2) / (2 * m.g);
+ double h_max = m.h_obj + d_extra;
+ double g_force = m.a1 / m.g;
+
+ int nivel = leerEnteroSeguro("\nSeleccione nivel de profundidad (1: Rapido, 2: Paso a paso, 3: Fisico): ", 1, 3);
+
+ printf("\n===================================================\n");
+ printf("     	PANEL DE ANALISIS - RESULTADOS            \n");
+ printf("===================================================\n");
+
+ if (nivel == 1) {
+  printf("1. Rapidez al desacople (v1): %.2f m/s | Altitud (y1): %.2f m\n", v1 y1);
+  printf("2. Rapidez maxima al apagado (v2): %.2f m/s\n", v2);
+  printf("3. Altitud maxima en caida libre (h_max): %.2f m\n", h_max);
+  printf("4. Aceleracion maxima: %.2f g\n, g_force);
+
+ } else if (nivel == 2) {
+   printf("1. v1 = a1 * t1 = %.1f * %.1f = %.2f m/s\n", m.a1, m.t1, v1);
+   printf("   y1 = 0.5 * a1 * t1^2 = %.2f m\n", y1);
+   printf("2. v2 = sqrt(v1^2 + 2 * a2 * (h - y1)) = %.2f m/s\n", v2);
+   printf("3. h_max = h + (v2^2 / (2 * g)) = %.2f m\n", h_max);
+   printf("4. Carga g = a1 / g_tierra = %.2f g\n", g_force);
+
+ } else {
+   printf("1. En t1=%.0fs los SRB se separan. La nave acumula velocidad y altura.\n", m.t1);
+   printf("2. El nucleo continua acelerando hasta apagar motores a los %.0f m.\n", m.h_obj);
+   printf("3. Si los motores fallan, la inercia lleva a Orion hasta un apogeo de &.2f m.\n", h_max);
+   printf("4. La tripulacion experimenta una fuerza equivalente a %.2f veces su peso.\n", g_force);
+ }
+ print("===================================================\n");
+ printf("Presione Enter para continuar...");
+ getchar();
+}
+
+void mostrarAyudaGlosario() {
+ printf("\n--- GLOSARIO Y AYUDA ---\n")
+ printf("- MRUV: Movimiento Rectilineo Uniformemente Variado.\n");
+ printf("- SRB: Cohetes de combustible solido auxiliares del SLS.\n");
+ printf("- MECO: Corte del motor principal (Main Engine Cut Off).\n");
+ printf("- Apogeo: Punto mas alto de la trayectoria antes de descender.\n");
+ printf("Presione Enter para volver...");
+ getchar();
+}
