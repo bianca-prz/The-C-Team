@@ -90,25 +90,35 @@ El código está estructurado siguiendo principios de bajo acoplamiento y alta c
   * Glosario Interactivo: Submenú integrado diseñado para usuarios sin conocimientos previos de física o cohetería.
 
 ## ⚙️ Compilación y Ejecución
-**Requisitos Previos**
+#### **Requisitos Previos**
  - Compilador GCC (o compatible con estándar C99/C11).
  - Terminal con soporte para secuencias de escape ANSI (Windows Terminal, PowerShell moderno, Linux Bash o macOS Terminal).
 
-**Comando de Compilación**
+#### **Comando de Compilación**
 
-Desde la raíz del proyecto, ejecuta el siguiente comando (incluyendo -lm para enlazar la librería matemática <math.h>):
+* **1. Abrir la terminal en la carpeta del proyecto**
+  * Abre tu terminal (CMD, PowerShell o Terminal de Linux/macOS).
+  * Navega mediante comandos o haz clic en la barra de direcciones de la carpeta de tu proyecto, escribe `cmd` y presiona **Enter** para abrir la consola directamente allí.
 
-`gcc main.c simulador.c validaciones.c -o artemis_sim -lm`
+* **2. Compilar el código fuente**
+  Ejecuta el siguiente comando para unificar e compilar los módulos (`main.c`, `simulador.c` y `validaciones.c`), enlazando además la librería matemática (`-lm`) y generando el archivo ejecutable (`artemis_sim`):
 
-**Nota importante sobre la compilación (Librería Matemática)**
+  `gcc main.c simulador.c validaciones.c -o artemis_sim -lm`
+
+* **3. Ejecutar el Programa**
+Una vez completada la compilación sin errores, ejecuta el archivo binario generado:
+   * En windows: 
+    `artemis_sim.exe`
+   * En linux:
+    `./artemis_sim`
+
+#### **Nota importante sobre la compilación (Librería Matemática)**
 
 Al compilar el proyecto en sistemas basados en GCC, es **estrictamente necesario** incluir el indicador `-lm` al final del comando. 
 * ¿Por qué se requiere?: Archivos como `simulador.c` utilizan funciones matemáticas avanzadas de la biblioteca estándar de C (`<math.h>`), tales como la raíz cuadrada (`sqrt`) para velocidades y la potenciación (`pow`) para cálculos de altitud. 
 * ¿Qué sucede si se omite?: Si intentas compilar ejecutando únicamente el comando base sin el `-lm`, el compilador se detendrá y arrojará un **error de enlace (*linker error*)** indicando una referencia indefinida a las funciones matemáticas (`undefined reference to 'sqrt'` o `'pow'`). Esto ocurre porque GCC no vincula la librería matemática de forma predeterminada por motivos de optimización de sistemas.
 
----
-
-### 🤖 Uso de Inteligencia Artificial en el Desarrollo
+## 🤖 Uso de Inteligencia Artificial en el Desarrollo
 
 Durante el desarrollo de este simulador de la misión Artemis, se empleó Inteligencia Artificial como una herramienta de colaboración técnica, diseño y depuración de código bajo los siguientes criterios: 
 
