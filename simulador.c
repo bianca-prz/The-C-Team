@@ -356,10 +356,10 @@ void mostrarAyudaGlosario() {
                 break;
         }
 
-        if (opcionGlosario != 6) {
+        if (opcionGlosario != 7) {
             printf("\nPresione Enter para continuar viendo el glosario...");
             getchar(); // Limpia el buffer y espera que el usuario presione Enter
         }
 
-    } while (opcionGlosario != 6);
+    } while (opcionGlosario != 7);
 }
