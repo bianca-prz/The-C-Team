@@ -57,7 +57,7 @@ El motor físico del simulador resuelve las ecuaciones cinemáticas del **Movimi
 
 * **2. Rapidez máxima al apagado de motores (`MECO`):**
   Determina la velocidad final que alcanza la cápsula Orion al llegar a la altitud objetivo (`h<sub>obj</sub>`) impulsada únicamente por el núcleo principal:
-  * **Rapidez final:** `v<sub>2</sub>= √( (v<sub>1</sub> ^ 2) + 2 * a<sub>2</sub> * (h<sub>obj</sub> - y<sub>1</sub>) )`
+  * **Rapidez final:** v<sub>2</sub>= √( (v<sub>1</sub> ^ 2) + 2 * a<sub>2</sub> * (h<sub>obj</sub> - y<sub>1</sub>) )
 
 * **3. Altitud máxima en caída libre por contingencia (`h<sub>max</sub>`):**
   En caso de falla repentina de motores al alcanzar la altura objetivo, calcula el apogeo máximo que logra la nave por inercia antes de comenzar a descender por efecto de la gravedad (`g`):
