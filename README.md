@@ -118,6 +118,17 @@ Al compilar el proyecto en sistemas basados en GCC, es **estrictamente necesario
 * ¿Por qué se requiere?: Archivos como `simulador.c` utilizan funciones matemáticas avanzadas de la biblioteca estándar de C (`<math.h>`), tales como la raíz cuadrada (`sqrt`) para velocidades y la potenciación (`pow`) para cálculos de altitud. 
 * ¿Qué sucede si se omite?: Si intentas compilar ejecutando únicamente el comando base sin el `-lm`, el compilador se detendrá y arrojará un **error de enlace (*linker error*)** indicando una referencia indefinida a las funciones matemáticas (`undefined reference to 'sqrt'` o `'pow'`). Esto ocurre porque GCC no vincula la librería matemática de forma predeterminada por motivos de optimización de sistemas.
 
+#### **Nota sobre Codificación de Caracteres en Consola (Windows)**
+
+Si al ejecutar el simulador en sistemas Windows notas caracteres extraños o símbolos inesperados en los textos (debido a las tildes y eñes del idioma español), puedes solucionarlo de las siguientes maneras:
+
+1. **Cambiar la codificación temporalmente en la terminal:**
+   Antes de ejecutar el programa, ingresa el siguiente comando para forzar a la consola a utilizar la codificación UTF-8:
+   `chcp 65001`
+   Luego de esto, ejecuta tu archivo ejecutable con normalidad (artemis_sim.exe).
+2. **Quitar las tildes y eñes del código**
+   Quitar las tildes asegura que se vea perfecto en cualquier computadora y terminal sin importar la configuración regional del sistema.
+
 ## 🤖 Uso de Inteligencia Artificial en el Desarrollo
 
 Durante el desarrollo de este simulador de la misión Artemis, se empleó Inteligencia Artificial como una herramienta de colaboración técnica, diseño y depuración de código bajo los siguientes criterios: 
