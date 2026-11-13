@@ -283,19 +283,32 @@ void mostrarAyudaGlosario() {
         printf("             CENTRO DE AYUDA Y GLOSARIO            \n");
         printf("===================================================\n");
         printf(" Seleccione el tema sobre el que desea consultar:\n");
-        printf(" 1) ¿Qué es el SLS y la cápsula Orion? (Conceptos base)\n");
-        printf(" 2) Fases del vuelo y MRUV (Física del ascenso)\n");
-        printf(" 3) Eventos críticos: SRB, Desacople y MECO\n");
-        printf(" 4) Fuerzas, gravedad y apogeo (Sensaciones de vuelo)\n");
-        printf(" 5) Controles del simulador en vivo ([P], [X], [F], [Q])\n");
-        printf(" 6) Volver al menú principal\n");
+        printf(" 1) ¿Cómo jugar y operar el simulador? (¡Empieza aquí!)\n");
+        printf(" 2) ¿Qué es el SLS y la cápsula Orion? (Conceptos base)\n");
+        printf(" 3) Fases del vuelo y MRUV (Física del ascenso)\n");
+        printf(" 4) Eventos críticos: SRB, Desacople y MECO\n");
+        printf(" 5) Fuerzas, gravedad y apogeo (Sensaciones de vuelo)\n");
+        printf(" 6) Controles del simulador en vivo ([P], [X], [F], [Q])\n");
+        printf(" 7) Volver al menú principal\n");
         printf("===================================================\n");
 
         // Usamos tu validador seguro para evitar errores de tipeo del usuario
-        opcionGlosario = leerEnteroSeguro("Seleccione una opcion (1-6): ", 1, 6);
+        opcionGlosario = leerEnteroSeguro("Seleccione una opcion (1-7): ", 1, 7);
 
         switch (opcionGlosario) {
             case 1:
+                printf("\n--- COMO JUGAR Y OPERAR LA SIMULACION ---\n");
+                printf("1. Inicia eligiendo la opcion '2) Iniciar lanzamiento' en el menu.\n");
+                printf("2. Observa la cuenta regresiva (T-10 a T-0) y el despegue.\n");
+                printf("3. Durante el vuelo en tiempo real, usa tu teclado para interactuar:\n");
+                printf("   - Presiona [P] para pausar o reanudar el cronometro.\n");
+                printf("   - Presiona [X] para acelerar el tiempo (x1 -> x10 -> x50).\n");
+                printf("   - Presiona [F] para simular una falla de motores de emergencia.\n");
+                printf("   - Presiona [Q] para abortar la mision si algo sale mal.\n");
+                printf("4. El objetivo es alcanzar la altura meta (ej. 160 km) para lograr el MECO.\n");
+                break;
+                
+            case 2:
                 printf("\n--- SLS Y CAPSULA ORION ---\n");
                 printf("- SLS (Space Launch System): Es el cohete gigante de la NASA,\n");
                 printf("  el más potente del mundo, diseñado para llevar la cápsula Artemis.\n");
@@ -303,7 +316,7 @@ void mostrarAyudaGlosario() {
                 printf("  donde viaja la tripulación hacia el espacio profundo.\n");
                 break;
 
-            case 2:
+            case 3:
                 printf("\n--- FASES DEL VUELO Y MRUV ---\n");
                 printf("- MRUV (Movimiento Rectilíneo Uniformemente Variado): Modelo físico\n");
                 printf("  donde el cohete avanza en línea recta y su velocidad aumenta\n");
@@ -312,7 +325,7 @@ void mostrarAyudaGlosario() {
                 printf("- Fase 2: Vuelo impulsado exclusivamente por el núcleo principal.\n");
                 break;
 
-            case 3:
+            case 4:
                 printf("\n--- EVENTOS CRÍTICOS ---\n");
                 printf("- SRB (Solid Rocket Boosters): Cohetes sólidos laterales que dan\n");
                 printf("  el empuje brutal inicial del despegue.\n");
@@ -322,7 +335,7 @@ void mostrarAyudaGlosario() {
                 printf("  la altitud objetivo (ej. 160 km).\n");
                 break;
 
-            case 4:
+            case 5:
                 printf("\n--- FUERZAS, GRAVEDAD Y APOGEO ---\n");
                 printf("- Fuerza G: Es la sensación de peso. Si experimentas 2.0 g, sientes\n");
                 printf("  como si tu cuerpo pesara el doble debido a la aceleración.\n");
@@ -330,7 +343,7 @@ void mostrarAyudaGlosario() {
                 printf("  antes de frenar por completo y comenzar a descender.\n");
                 break;
 
-            case 5:
+            case 6:
                 printf("\n--- CONTROLES DEL SIMULADOR EN VIVO ---\n");
                 printf("- [P] Pausa: Congela temporalmente el cronómetro de vuelo.\n");
                 printf("- [X] Velocidad: Cambia el factor de aceleración temporal (x1, x10, x50).\n");
@@ -338,7 +351,7 @@ void mostrarAyudaGlosario() {
                 printf("- [Q] Abortar: Cancela la misión de inmediato por seguridad.\n");
                 break;
 
-            case 6:
+            case 7:
                 printf("\nRegresando al menú principal...\n");
                 break;
         }
