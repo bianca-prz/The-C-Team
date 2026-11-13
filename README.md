@@ -28,6 +28,13 @@ Durante el despegue desde el Centro Espacial Kennedy, el cohete Space Launch Sys
 2. **Fase 2 (Núcleo Principal):** El motor principal continúa acelerando la nave a a<sub>2</sub> = 12,5 m/s<sup>2</sup> hasta alcanzar la altitud objetivo de h = 160.000,0 m (160,0 km), momento en el cual se produce el apagado de motores (MECO).
 3. **Fase 3 (Inercia y Caída Libre - Opcional/Contingencia):** Si los motores fallaran al llegar a los 160,0 km, la nave continúa por inercia bajo la aceleración de la gravedad (g = 9,80 m/s<sup>2</sup>) hasta alcanzar una altitud máxima (h<sub>máx</sub>).
 
-#### Reglas del Juego
+## 🎮 Reglas del Juego
+El simulador actúa como una consola interactiva de Centro de Control de Misión, donde el operador puede configurar parámetros físicos, monitorear el ascenso en tiempo real y responder ante contingencias:
+1. Configuración Inicial (Pre-Lanzamiento):
+  ** El usuario puede operar con los valores oficiales de Artemis I o personalizar cada parámetro dentro de rangos físicos seguros.
+  ** Regla de Despegue: La aceleración inicial (a<sub>1</sub>) debe superar la gravedad local (g) para que el cohete logre vencer su propio peso y elevarse.
+
+
+
 
 
