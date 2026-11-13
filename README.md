@@ -68,5 +68,13 @@ El motor físico del simulador resuelve las ecuaciones cinemáticas del **Movimi
   Expresa la aceleración máxima soportada durante el despegue como múltiplo de la gravedad terrestre:
   * **Múltiplo de gravedad:** `Carga g = a1 / g`
 
+## 🏗️ Arquitectura Modular del Proyecto
+El código está estructurado siguiendo principios de bajo acoplamiento y alta cohesión, separando la lógica de interfaz, la física y la seguridad de entrada en módulos independientes:
+- artemis-simulator/ -
+-- main.c            # Director principal: inicializa la misión y gestiona el menú.
+-- simulador.h       # Interfaz pública: estructuras de datos (ParametrosMision) y prototipos.
+-- simulador.c       # Núcleo lógico: tablero de telemetría en vivo, MRUV, panel de análisis y glosario.
+-- validaciones.h    # Cabecera del sistema de entrada segura.
+-- validaciones.c    # Blindaje de I/O (fgets + sscanf) contra entradas inválidas o fuera de rango.
 
 
