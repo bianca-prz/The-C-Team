@@ -30,10 +30,21 @@ Durante el despegue desde el Centro Espacial Kennedy, el cohete Space Launch Sys
 
 ## 🎮 Reglas del Juego
 El simulador actúa como una consola interactiva de Centro de Control de Misión, donde el operador puede configurar parámetros físicos, monitorear el ascenso en tiempo real y responder ante contingencias:
-1. Configuración Inicial (Pre-Lanzamiento):
-  ** El usuario puede operar con los valores oficiales de Artemis I o personalizar cada parámetro dentro de rangos físicos seguros.
-  ** Regla de Despegue: La aceleración inicial (a<sub>1</sub>) debe superar la gravedad local (g) para que el cohete logre vencer su propio peso y elevarse.
+1. **Configuración Inicial (Pre-Lanzamiento):**
+* El usuario puede operar con los valores oficiales de Artemis I o personalizar cada parámetro dentro de rangos físicos seguros.
+* Regla de Despegue: La aceleración inicial (a<sub>1</sub>) debe superar la gravedad local (g) para que el cohete logre vencer su propio peso y elevarse.
 
+2. **Telemetría en Vivo (Tablero Fijo):**
+* Una vez iniciada la secuencia (T-10 a T-0), la pantalla se actualiza dinámicamente en el mismo lugar sin desplazamientos infinitos, mostrando cronómetro T+ , barra de progreso visual de altitud, velocidad instantánea y carga en fuerzas g.
+
+3. **Controles del Operador en Tiempo Real:**
+* **[P] Pausa:** Congela el tiempo de la misión para inspeccionar variables instantáneas.
+* **[X] Multiplicador de Velocidad:** Alterna la escala temporal entre x1 (tiempo real), x10 y x50 para agilizar vuelos prolongados.
+* **[F] Simular Falla de Motores:** Corta el empuje repentinamente en pleno vuelo, activando el cálculo inmediato de trayectoria balística y estimando el apogeo máximo que alcanzará la cápsula Orion por inercia.
+* **[Q] Abortar Misión:** Cancela el lanzamiento de emergencia por seguridad.
+
+4. **Objetivo de Victoria:**
+* Alcanzar la altitud objetivo (h<sub>obj</sub>), sin fallas ni abortos para ejecutar con éxito el corte del motor principal (MECO).
 
 
 
