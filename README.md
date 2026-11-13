@@ -46,6 +46,27 @@ El simulador actúa como una consola interactiva de Centro de Control de Misión
 4. **Objetivo de Victoria:**
 * Alcanzar la altitud objetivo (h<sub>obj</sub>), sin fallas ni abortos para ejecutar con éxito el corte del motor principal (MECO).
 
+## 📐 Modelo Físico y Cálculos Analíticos (MRUV)
+
+El motor físico del simulador resuelve las ecuaciones cinemáticas del **Movimiento Rectilíneo Uniformemente Variado (MRUV)** divididas por tramos de vuelo:
+
+* **1. Condiciones al desacople de los SRB (`t = t1`):**
+  Calcula la velocidad y la altura acumulada al finalizar la primera etapa de empuje conjunto:
+  * **Rapidez al desacople:** `v1 = a1 * t1`
+  * **Altitud al desacople:** `y1 = 0.5 * a1 * (t1 ^ 2)`
+
+* **2. Rapidez máxima al apagado de motores (`MECO`):**
+  Determina la velocidad final que alcanza la cápsula Orion al llegar a la altitud objetivo (`h_obj`) impulsada únicamente por el núcleo principal:
+  * **Rapidez final:** `v2 = √( (v1 ^ 2) + 2 * a2 * (h_obj - y1) )`
+
+* **3. Altitud máxima en caída libre por contingencia (`h_max`):**
+  En caso de falla repentina de motores al alcanzar la altura objetivo, calcula el apogeo máximo que logra la nave por inercia antes de comenzar a descender por efecto de la gravedad (`g`):
+  * **Altura extra por inercia:** `d_extra = (v2 ^ 2) / (2 * g)`
+  * **Apogeo total:** `h_max = h_obj + d_extra`
+
+* **4. Carga gravitacional sobre la tripulación (`Fuerza g`):**
+  Expresa la aceleración máxima soportada durante el despegue como múltiplo de la gravedad terrestre:
+  * **Múltiplo de gravedad:** `Carga g = a1 / g`
 
 
 
