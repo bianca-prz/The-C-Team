@@ -74,12 +74,12 @@ El motor físico del simulador resuelve las ecuaciones cinemáticas del **Movimi
 
 ## 🏗️ Arquitectura Modular del Proyecto
 El código está estructurado siguiendo principios de bajo acoplamiento y alta cohesión, separando la lógica de interfaz, la física y la seguridad de entrada en módulos independientes:
-#### artemis-simulator/ 
-- main.c            # Director principal: inicializa la misión y gestiona el menú.
-- simulador.h       # Interfaz pública: estructuras de datos (ParametrosMision) y prototipos.
-- simulador.c       # Núcleo lógico: tablero de telemetría en vivo, MRUV, panel de análisis y glosario.
-- validaciones.h    # Cabecera del sistema de entrada segura.
-- validaciones.c    # Blindaje de I/O (fgets + sscanf) contra entradas inválidas o fuera de rango.
+`** artemis-simulator/ **
+- main.c            ➞ Director principal: inicializa la misión y gestiona el menú.
+- simulador.h       ➞ Interfaz pública: estructuras de datos (ParametrosMision) y prototipos.
+- simulador.c       ➞ Núcleo lógico: tablero de telemetría en vivo, MRUV, panel de análisis y glosario.
+- validaciones.h    ➞ Cabecera del sistema de entrada segura.
+- validaciones.c    ➞ Blindaje de I/O (fgets + sscanf) contra entradas inválidas o fuera de rango.`
 
 **Características Técnicas Destacadas:**
   * Multiplataforma (Windows / Linux / macOS): Implementa compilación condicional (#ifdef _WIN32) para gestionar retardos temporales (Sleep/usleep) y lectura de teclado no bloqueante (conio.h en Windows / termios en modo raw en POSIX) sin requerir dependencias externas.
@@ -90,10 +90,13 @@ El código está estructurado siguiendo principios de bajo acoplamiento y alta c
 **Requisitos Previos**
  - Compilador GCC (o compatible con estándar C99/C11).
  - Terminal con soporte para secuencias de escape ANSI (Windows Terminal, PowerShell moderno, Linux Bash o macOS Terminal).
+
 **Comando de Compilación**
 Desde la raíz del proyecto, ejecuta el siguiente comando (incluyendo -lm para enlazar la librería matemática <math.h>):
 
+<p align="center">
 `gcc main.c simulador.c validaciones.c -o artemis_sim -lm`
+</p>
 
 **Nota importante sobre la compilación (Librería Matemática)**
 
