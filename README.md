@@ -50,31 +50,65 @@ El simulador actúa como una consola interactiva de Centro de Control de Misión
 
 El motor físico del simulador resuelve las ecuaciones cinemáticas del **Movimiento Rectilíneo Uniformemente Variado (MRUV)** divididas por tramos de vuelo:
 
-* **1. Condiciones al desacople de los SRB (`t = t1`):**
+* **1. Condiciones al desacople de los SRB (`t = t<sub>1</sub>`): **
   Calcula la velocidad y la altura acumulada al finalizar la primera etapa de empuje conjunto:
-  * **Rapidez al desacople:** `v1 = a1 * t1`
-  * **Altitud al desacople:** `y1 = 0.5 * a1 * (t1 ^ 2)`
+  * **Rapidez al desacople:** `v<sub>1</sub>= a<sub>1</sub> * t<sub>1</sub>`
+  * **Altitud al desacople:** `y<sub>1</sub>= 0.5 * a<sub>1</sub> * (t<sub>1</sub>^2)`
 
 * **2. Rapidez máxima al apagado de motores (`MECO`):**
-  Determina la velocidad final que alcanza la cápsula Orion al llegar a la altitud objetivo (`h_obj`) impulsada únicamente por el núcleo principal:
-  * **Rapidez final:** `v2 = √( (v1 ^ 2) + 2 * a2 * (h_obj - y1) )`
+  Determina la velocidad final que alcanza la cápsula Orion al llegar a la altitud objetivo (`h<sub>obj</sub>`) impulsada únicamente por el núcleo principal:
+  * **Rapidez final:** `v<sub>2</sub>= √( (v<sub>1</sub> ^ 2) + 2 * a<sub>2</sub> * (h<sub>obj</sub> - y<sub>1</sub>) )`
 
-* **3. Altitud máxima en caída libre por contingencia (`h_max`):**
+* **3. Altitud máxima en caída libre por contingencia (`h<sub>max</sub>`):**
   En caso de falla repentina de motores al alcanzar la altura objetivo, calcula el apogeo máximo que logra la nave por inercia antes de comenzar a descender por efecto de la gravedad (`g`):
-  * **Altura extra por inercia:** `d_extra = (v2 ^ 2) / (2 * g)`
-  * **Apogeo total:** `h_max = h_obj + d_extra`
+  * **Altura extra por inercia:** `d<sub>extra</sub> = (v<sub>2</sub>^ 2) / (2 * g)`
+  * **Apogeo total:** `h<sub>max</sub> = h<sub>obj</sub> + d<sub>extra</sub>`
 
 * **4. Carga gravitacional sobre la tripulación (`Fuerza g`):**
   Expresa la aceleración máxima soportada durante el despegue como múltiplo de la gravedad terrestre:
-  * **Múltiplo de gravedad:** `Carga g = a1 / g`
+  * **Múltiplo de gravedad:** `Carga g = a<sub>1</sub> / g`
 
 ## 🏗️ Arquitectura Modular del Proyecto
 El código está estructurado siguiendo principios de bajo acoplamiento y alta cohesión, separando la lógica de interfaz, la física y la seguridad de entrada en módulos independientes:
-- artemis-simulator/ -
--- main.c            # Director principal: inicializa la misión y gestiona el menú.
--- simulador.h       # Interfaz pública: estructuras de datos (ParametrosMision) y prototipos.
--- simulador.c       # Núcleo lógico: tablero de telemetría en vivo, MRUV, panel de análisis y glosario.
--- validaciones.h    # Cabecera del sistema de entrada segura.
--- validaciones.c    # Blindaje de I/O (fgets + sscanf) contra entradas inválidas o fuera de rango.
+#### artemis-simulator/ 
+- main.c            # Director principal: inicializa la misión y gestiona el menú.
+- simulador.h       # Interfaz pública: estructuras de datos (ParametrosMision) y prototipos.
+- simulador.c       # Núcleo lógico: tablero de telemetría en vivo, MRUV, panel de análisis y glosario.
+- validaciones.h    # Cabecera del sistema de entrada segura.
+- validaciones.c    # Blindaje de I/O (fgets + sscanf) contra entradas inválidas o fuera de rango.
+
+** Características Técnicas Destacadas: **
+  * Multiplataforma (Windows / Linux / macOS): Implementa compilación condicional (#ifdef _WIN32) para gestionar retardos temporales (Sleep/usleep) y lectura de teclado no bloqueante (conio.h en Windows / termios en modo raw en POSIX) sin requerir dependencias externas.
+  * Panel de Análisis Multinivel: Permite consultar los resultados teóricos en 3 niveles de profundidad: 1) Resultado Rápido, 2) Desarrollo Matemático Paso a Paso y 3) Interpretación Física Conceptual.
+  * Glosario Interactivo: Submenú integrado diseñado para usuarios sin conocimientos previos de física o cohetería.
+
+## ⚙️ Compilación y Ejecución
+** Requisitos Previos **
+ - Compilador GCC (o compatible con estándar C99/C11).
+ - Terminal con soporte para secuencias de escape ANSI (Windows Terminal, PowerShell moderno, Linux Bash o macOS Terminal).
+** Comando de Compilación ** 
+Desde la raíz del proyecto, ejecuta el siguiente comando (incluyendo -lm para enlazar la librería matemática <math.h>):
+
+`gcc main.c simulador.c validaciones.c -o artemis_sim -lm`
+
+** Nota importante sobre la compilación (Librería Matemática) **
+
+Al compilar el proyecto en sistemas basados en GCC, es **estrictamente necesario** incluir el indicador `-lm` al final del comando. 
+* ¿Por qué se requiere?: Archivos como `simulador.c` utilizan funciones matemáticas avanzadas de la biblioteca estándar de C (`<math.h>`), tales como la raíz cuadrada (`sqrt`) para velocidades y la potenciación (`pow`) para cálculos de altitud. 
+* ¿Qué sucede si se omite?: Si intentas compilar ejecutando únicamente el comando base sin el `-lm`, el compilador se detendrá y arrojará un **error de enlace (*linker error*)** indicando una referencia indefinida a las funciones matemáticas (`undefined reference to 'sqrt'` o `'pow'`). Esto ocurre porque GCC no vincula la librería matemática de forma predeterminada por motivos de optimización de sistemas.
+
+---
+
+### 🤖 Uso de Inteligencia Artificial en el Desarrollo
+
+Durante el desarrollo de este simulador de la misión Artemis, se empleó Inteligencia Artificial como una herramienta de colaboración técnica, diseño y depuración de código bajo los siguientes criterios: 
+
+* **Arquitectura Modular y Buenas Prácticas:** Asistencia en la estructuración de la separación de responsabilidades (`main.c`, `simulador.c`, `validaciones.c` y sus respectivas cabeceras `.h`) para garantizar bajo acoplamiento y alta cohesión.
+* **Planteamiento Inicial del Escenario:** Consulta para obtener ideas iniciales sobre cómo comenzar a plantear y estructurar la lógica del escenario de la misión en código C.
+* **Resolución de Interfaz y I/O de Bajo Nivel:** Apoyo en el diseño del tablero de telemetría de actualización estática en tiempo real mediante secuencias de escape ANSI (`\033[H`), y en la implementación de la lectura de teclado no bloqueante condicional (`conio.h` para Windows y `termios` en modo *raw* para entornos POSIX/Linux).
+* **Validación de Modelos Físicos:** Verificación de las ecuaciones cinemáticas del Movimiento Rectilíneo Uniformemente Variado (MRUV), cálculo de tramos por fases, eventos de desacople de SRB, corte de motor principal (MECO) y estimación balística de apogeo por inercia ante fallas.
+* **Compilación y Depuración:** Utilización como apoyo en el proceso de compilación, en la detección de errores de sintaxis y en la revisión o depuración de estructuras desarrolladas.
+* **Documentación y Glosario Didáctico:** Creación y estructuración de los contenidos del glosario interactivo multinivel, diseñado para traducir conceptos complejos de física aeroespacial a un lenguaje accesible para no expertos.
+
 
 
