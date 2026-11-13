@@ -276,11 +276,77 @@ void mostrarPanelAnalisis (ParametrosMision m) {
 }
 
 void mostrarAyudaGlosario() {
- printf("\n--- GLOSARIO Y AYUDA ---\n");
- printf("- MRUV: Movimiento Rectilineo Uniformemente Variado.\n");
- printf("- SRB: Cohetes de combustible solido auxiliares del SLS.\n");
- printf("- MECO: Corte del motor principal (Main Engine Cut Off).\n");
- printf("- Apogeo: Punto mas alto de la trayectoria antes de descender.\n");
- printf("Presione Enter para volver...");
- getchar();
+    int opcionGlosario;
+    
+    do {
+        printf("\n===================================================\n");
+        printf("             CENTRO DE AYUDA Y GLOSARIO            \n");
+        printf("===================================================\n");
+        printf(" Seleccione el tema sobre el que desea consultar:\n");
+        printf(" 1) ¿Qué es el SLS y la cápsula Orion? (Conceptos base)\n");
+        printf(" 2) Fases del vuelo y MRUV (Física del ascenso)\n");
+        printf(" 3) Eventos críticos: SRB, Desacople y MECO\n");
+        printf(" 4) Fuerzas, gravedad y apogeo (Sensaciones de vuelo)\n");
+        printf(" 5) Controles del simulador en vivo ([P], [X], [F], [Q])\n");
+        printf(" 6) Volver al menú principal\n");
+        printf("===================================================\n");
+
+        // Usamos tu validador seguro para evitar errores de tipeo del usuario
+        opcionGlosario = leerEnteroSeguro("Seleccione una opcion (1-6): ", 1, 6);
+
+        switch (opcionGlosario) {
+            case 1:
+                printf("\n--- SLS Y CAPSULA ORION ---\n");
+                printf("- SLS (Space Launch System): Es el cohete gigante de la NASA,\n");
+                printf("  el más potente del mundo, diseñado para llevar la cápsula Artemis.\n");
+                printf("- Cápsula Orion: El habitáculo presurizado en la punta del cohete\n");
+                printf("  donde viaja la tripulación hacia el espacio profundo.\n");
+                break;
+
+            case 2:
+                printf("\n--- FASES DEL VUELO Y MRUV ---\n");
+                printf("- MRUV (Movimiento Rectilíneo Uniformemente Variado): Modelo físico\n");
+                printf("  donde el cohete avanza en línea recta y su velocidad aumenta\n");
+                printf("  de forma constante y pareja gracias al empuje de los motores.\n");
+                printf("- Fase 1: Despegue con la potencia combinada de los motores y los SRB.\n");
+                printf("- Fase 2: Vuelo impulsado exclusivamente por el núcleo principal.\n");
+                break;
+
+            case 3:
+                printf("\n--- EVENTOS CRÍTICOS ---\n");
+                printf("- SRB (Solid Rocket Boosters): Cohetes sólidos laterales que dan\n");
+                printf("  el empuje brutal inicial del despegue.\n");
+                printf("- Desacople: El momento exacto (t1) en que los SRB vacíos se sueltan\n");
+                printf("  para aligerar el peso del cohete.\n");
+                printf("- MECO (Main Engine Cut Off): Corte del motor principal al alcanzar\n");
+                printf("  la altitud objetivo (ej. 160 km).\n");
+                break;
+
+            case 4:
+                printf("\n--- FUERZAS, GRAVEDAD Y APOGEO ---\n");
+                printf("- Fuerza G: Es la sensación de peso. Si experimentas 2.0 g, sientes\n");
+                printf("  como si tu cuerpo pesara el doble debido a la aceleración.\n");
+                printf("- Apogeo: El punto más alto que alcanza una nave en caída libre\n");
+                printf("  antes de frenar por completo y comenzar a descender.\n");
+                break;
+
+            case 5:
+                printf("\n--- CONTROLES DEL SIMULADOR EN VIVO ---\n");
+                printf("- [P] Pausa: Congela temporalmente el cronómetro de vuelo.\n");
+                printf("- [X] Velocidad: Cambia el factor de aceleración temporal (x1, x10, x50).\n");
+                printf("- [F] Falla de motores: Simula una emergencia y calcula la inercia balística.\n");
+                printf("- [Q] Abortar: Cancela la misión de inmediato por seguridad.\n");
+                break;
+
+            case 6:
+                printf("\nRegresando al menú principal...\n");
+                break;
+        }
+
+        if (opcionGlosario != 6) {
+            printf("\nPresione Enter para continuar viendo el glosario...");
+            getchar(); // Limpia el buffer y espera que el usuario presione Enter
+        }
+
+    } while (opcionGlosario != 6);
 }
