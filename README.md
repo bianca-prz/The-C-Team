@@ -50,23 +50,27 @@ El simulador actúa como una consola interactiva de Centro de Control de Misión
 
 El motor físico del simulador resuelve las ecuaciones cinemáticas del **Movimiento Rectilíneo Uniformemente Variado (MRUV)** divididas por tramos de vuelo:
 
-* **1. Condiciones al desacople de los SRB (`t = t<sub>1</sub>`): **
+* **1. Condiciones al desacople de los SRB (t = t<sub>1</sub>):**
   Calcula la velocidad y la altura acumulada al finalizar la primera etapa de empuje conjunto:
-  * **Rapidez al desacople:** `v<sub>1</sub>= a<sub>1</sub> * t<sub>1</sub>`
-  * **Altitud al desacople:** `y<sub>1</sub>= 0.5 * a<sub>1</sub> * (t<sub>1</sub>^2)`
+  * **Rapidez al desacople:** 
+     v<sub>1</sub>= a<sub>1</sub> * t<sub>1</sub>
+  * **Altitud al desacople:** 
+     y<sub>1</sub>= 0.5 * a<sub>1</sub> * (t<sub>1</sub>^2)
 
-* **2. Rapidez máxima al apagado de motores (`MECO`):**
-  Determina la velocidad final que alcanza la cápsula Orion al llegar a la altitud objetivo (`h<sub>obj</sub>`) impulsada únicamente por el núcleo principal:
-  * **Rapidez final:** v<sub>2</sub>= √( (v<sub>1</sub> ^ 2) + 2 * a<sub>2</sub> * (h<sub>obj</sub> - y<sub>1</sub>) )
+* **2. Rapidez máxima al apagado de motores (MECO):**
+  Determina la velocidad final que alcanza la cápsula Orion al llegar a la altitud objetivo (h<sub>obj</sub>)impulsada únicamente por el núcleo principal:
+  * **Rapidez final:** 
+    v<sub>2</sub>= √( (v<sub>1</sub> ^ 2) + 2 * a<sub>2</sub> * (h<sub>obj</sub> - y<sub>1</sub>) )
 
-* **3. Altitud máxima en caída libre por contingencia (`h<sub>max</sub>`):**
+* **3. Altitud máxima en caída libre por contingencia (h<sub>max</sub>):**
   En caso de falla repentina de motores al alcanzar la altura objetivo, calcula el apogeo máximo que logra la nave por inercia antes de comenzar a descender por efecto de la gravedad (`g`):
-  * **Altura extra por inercia:** `d<sub>extra</sub> = (v<sub>2</sub>^ 2) / (2 * g)`
-  * **Apogeo total:** `h<sub>max</sub> = h<sub>obj</sub> + d<sub>extra</sub>`
+  * **Altura extra por inercia:** d<sub>extra</sub> = (v<sub>2</sub>^ 2) / (2 * g)
+  * **Apogeo total:** 
+    h<sub>max</sub> = h<sub>obj</sub> + d<sub>extra</sub>
 
-* **4. Carga gravitacional sobre la tripulación (`Fuerza g`):**
+* **4. Carga gravitacional sobre la tripulación (Fuerza g):**
   Expresa la aceleración máxima soportada durante el despegue como múltiplo de la gravedad terrestre:
-  * **Múltiplo de gravedad:** `Carga g = a<sub>1</sub> / g`
+  * **Múltiplo de gravedad:** Carga g = a<sub>1</sub> / g
 
 ## 🏗️ Arquitectura Modular del Proyecto
 El código está estructurado siguiendo principios de bajo acoplamiento y alta cohesión, separando la lógica de interfaz, la física y la seguridad de entrada en módulos independientes:
@@ -77,21 +81,21 @@ El código está estructurado siguiendo principios de bajo acoplamiento y alta c
 - validaciones.h    # Cabecera del sistema de entrada segura.
 - validaciones.c    # Blindaje de I/O (fgets + sscanf) contra entradas inválidas o fuera de rango.
 
-** Características Técnicas Destacadas: **
+**Características Técnicas Destacadas:**
   * Multiplataforma (Windows / Linux / macOS): Implementa compilación condicional (#ifdef _WIN32) para gestionar retardos temporales (Sleep/usleep) y lectura de teclado no bloqueante (conio.h en Windows / termios en modo raw en POSIX) sin requerir dependencias externas.
   * Panel de Análisis Multinivel: Permite consultar los resultados teóricos en 3 niveles de profundidad: 1) Resultado Rápido, 2) Desarrollo Matemático Paso a Paso y 3) Interpretación Física Conceptual.
   * Glosario Interactivo: Submenú integrado diseñado para usuarios sin conocimientos previos de física o cohetería.
 
 ## ⚙️ Compilación y Ejecución
-** Requisitos Previos **
+**Requisitos Previos**
  - Compilador GCC (o compatible con estándar C99/C11).
  - Terminal con soporte para secuencias de escape ANSI (Windows Terminal, PowerShell moderno, Linux Bash o macOS Terminal).
-** Comando de Compilación ** 
+**Comando de Compilación**
 Desde la raíz del proyecto, ejecuta el siguiente comando (incluyendo -lm para enlazar la librería matemática <math.h>):
 
 `gcc main.c simulador.c validaciones.c -o artemis_sim -lm`
 
-** Nota importante sobre la compilación (Librería Matemática) **
+**Nota importante sobre la compilación (Librería Matemática)**
 
 Al compilar el proyecto en sistemas basados en GCC, es **estrictamente necesario** incluir el indicador `-lm` al final del comando. 
 * ¿Por qué se requiere?: Archivos como `simulador.c` utilizan funciones matemáticas avanzadas de la biblioteca estándar de C (`<math.h>`), tales como la raíz cuadrada (`sqrt`) para velocidades y la potenciación (`pow`) para cálculos de altitud. 
